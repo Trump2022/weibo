@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\User
@@ -77,5 +78,14 @@ class User extends Authenticatable
         $hash = md5(strtolower(trim('summer@example.com')));
         //return "http://www.gravatar.com/avatar/$hash?s=$size";
         return "/avatar/$hash.jpg";
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->activation_token = Str::random(10);
+        });
     }
 }
